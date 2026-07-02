@@ -1,4 +1,4 @@
-**portfolio-shot**
+# portfolio-shot
 
 - [Home](Home)
 - [Getting Started](Getting-Started)
@@ -6,6 +6,15 @@
 - [CLI Reference](CLI-Reference)
 - [Troubleshooting](Troubleshooting)
 - [Roadmap](Roadmap)
+
+## 한국어
+
+- [홈](Home-ko)
+- [시작하기](Getting-Started-ko)
+- [설정 옵션](Configuration-Reference-ko)
+- [CLI 명령어](CLI-Reference-ko)
+- [트러블슈팅](Troubleshooting-ko)
+- [로드맵](Roadmap-ko)
 
 ---
 
