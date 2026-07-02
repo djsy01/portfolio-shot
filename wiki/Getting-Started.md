@@ -9,11 +9,24 @@
   npx playwright install chromium
   ```
 
+- `typescript` in your project, only if you want to use a `.ts` config (optional peer dependency — `.js`/`.mjs`/`.cjs`/`.json` work without it)
+
 ## Install
+
+No need to clone this repository — portfolio-shot is published on npm.
 
 ```bash
 npm install --save-dev portfolio-shot
 ```
+
+**Or skip installing entirely** for a one-off run:
+
+```bash
+npx portfolio-shot@latest init
+npx portfolio-shot@latest generate
+```
+
+`npx` downloads the package to a temporary cache and runs it without touching your `package.json`/`node_modules` — handy for trying it out or a single capture. Switch to `npm install --save-dev` (above) once you want it as a repeatable part of your workflow.
 
 ## Scaffold a config
 
@@ -67,11 +80,17 @@ Done in 4.2s
 
 Screenshots land in `<output>/<name>.<format>` — with the example config above, `./public/screenshots/home.webp` and `./public/screenshots/projects.webp`.
 
+## Next steps
+
+- Capture multiple devices and light/dark mode in one run — [Devices and Dark Mode](Devices-and-Dark-Mode)
+- Capture pages behind a login — [Authentication](Authentication)
+- Every config field, with examples — [Configuration Reference](Configuration-Reference)
+
 ## Project layout (for contributors)
 
 ```text
 src/
-  browser/   Playwright lifecycle (launch, context, navigation, screenshot)
+  browser/   Playwright lifecycle (launch, context, navigation, screenshot, devices, auth)
   config/    Config discovery, validation, and defaults
   image/     Sharp-based optimization and format conversion
   cli/       Commander-based CLI (init, generate)

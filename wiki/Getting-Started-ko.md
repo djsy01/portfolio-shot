@@ -9,11 +9,24 @@
   npx playwright install chromium
   ```
 
+- `.ts` 설정 파일을 쓰고 싶다면 프로젝트에 `typescript`가 있어야 합니다 (선택적 peer dependency — `.js`/`.mjs`/`.cjs`/`.json`은 없어도 동작합니다)
+
 ## 설치
+
+이 저장소를 클론할 필요는 없습니다 — portfolio-shot은 npm에 배포되어 있습니다.
 
 ```bash
 npm install --save-dev portfolio-shot
 ```
+
+**아예 설치하지 않고 한 번만 실행**할 수도 있습니다.
+
+```bash
+npx portfolio-shot@latest init
+npx portfolio-shot@latest generate
+```
+
+`npx`는 패키지를 임시 캐시로 받아서 `package.json`/`node_modules`를 건드리지 않고 바로 실행합니다 — 한 번 써보거나 단발성 캡처에 유용합니다. 반복적으로 쓰고 싶어지면 위의 `npm install --save-dev`로 전환하세요.
 
 ## 설정 파일 생성
 
@@ -67,11 +80,17 @@ Done in 4.2s
 
 스크린샷은 `<output>/<name>.<format>`에 저장됩니다 — 위 예제 설정이라면 `./public/screenshots/home.webp`, `./public/screenshots/projects.webp`.
 
+## 다음 단계
+
+- 한 번의 실행으로 여러 디바이스와 라이트/다크 모드 캡처하기 — [디바이스와 다크 모드](Devices-and-Dark-Mode-ko)
+- 로그인 뒤의 페이지 캡처하기 — [인증](Authentication-ko)
+- 모든 설정 필드와 예제 — [설정 옵션](Configuration-Reference-ko)
+
 ## 프로젝트 구조 (기여자용)
 
 ```text
 src/
-  browser/   Playwright 라이프사이클 (실행, 컨텍스트, 이동, 스크린샷)
+  browser/   Playwright 라이프사이클 (실행, 컨텍스트, 이동, 스크린샷, 디바이스, 인증)
   config/    설정 파일 탐색, 검증, 기본값 처리
   image/     Sharp 기반 이미지 최적화 및 포맷 변환
   cli/       Commander 기반 CLI (init, generate)

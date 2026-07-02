@@ -1,0 +1,38 @@
+name: Feature request
+description: Suggest an idea or improvement
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check the [Roadmap](https://github.com/djsy01/portfolio-shot/wiki/Roadmap) first — `discover` mode (v2.0) and the GitHub Actions integration (v3.0) are already planned. If your idea fits one of those, feel free to +1 an existing issue instead of opening a new one.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What are you trying to do that portfolio-shot doesn't support today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What would the config/CLI/API look like? A rough example is great.
+      render: ts
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any workarounds you're using today, or other approaches you considered.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context

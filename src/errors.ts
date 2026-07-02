@@ -35,3 +35,10 @@ export class OutputDirectoryError extends PortfolioShotError {
     this.name = 'OutputDirectoryError';
   }
 }
+
+export class AuthError extends PortfolioShotError {
+  constructor(message: string, cause?: unknown) {
+    super(message, { cause });
+    this.name = 'AuthError';
+  }
+}

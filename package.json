@@ -1,6 +1,6 @@
 {
   "name": "portfolio-shot",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "description": "Automatically capture, optimize, and save screenshots of your web projects for developer portfolios.",
   "keywords": [
     "screenshot",
@@ -47,6 +47,14 @@
     "fs-extra": "^11.2.0",
     "playwright": "^1.47.0",
     "sharp": "^0.33.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

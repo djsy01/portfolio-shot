@@ -25,9 +25,32 @@ npx playwright install chromium
 - **백그라운드 폴링이 끝나지 않음** — `networkidle`은 500ms 동안 네트워크 활동이 없어야 충족되는데, 앱이 롱폴링을 하거나 웹소켓을 계속 열어두면 이 조건이 영영 충족되지 않을 수 있습니다. `waitUntil`을 `"load"`나 `"domcontentloaded"`로 바꾸세요.
 - **사이트가 실제로 다운됐거나 URL/경로가 잘못됨** — 먼저 일반 브라우저에서 URL이 정상적으로 열리는지 확인하세요.
 
-## 설정 필드가 로드 시점에 거부됨 (`url`, `format`, `quality` 등)
+## 설정 필드가 로드 시점에 거부됨 (`url`, `format`, `quality`, `devices`, `colorSchemes`, `auth` 등)
 
-설정 검증은 아무것도 실행되기 전에 이루어지며, 에러 메시지에 정확한 필드명과 이유가 나옵니다 (예: `Config "quality" must be between 1 and 100.`). [설정 옵션](Configuration-Reference-ko)과 대조해보세요.
+설정 검증은 CLI를 쓰든 `generate()`를 스크립트에서 직접 호출하든 상관없이 아무것도 실행되기 전에 이루어지며, 에러 메시지에 정확한 필드명과 이유가 나옵니다 (예: `Config "quality" must be between 1 and 100.`, `Config "colorSchemes" entries must be one of: light, dark, no-preference.`). [설정 옵션](Configuration-Reference-ko)과 대조해보세요.
+
+## `Unknown device "..."`
+
+`devices` 항목이 `"desktop"`, `"mobile"`, `"tablet"`도 아니고 정확한 Playwright 디바이스 이름도 아닙니다. [Playwright 디바이스 카탈로그](https://github.com/microsoft/playwright/blob/main/packages/playwright-core/src/server/deviceDescriptorsSource.json)에서 철자를 확인하거나, 커스텀 객체를 사용하세요: `{ name: "wide", viewport: { width: 1920, height: 1080 } }`. [디바이스와 다크 모드](Devices-and-Dark-Mode-ko) 참고.
+
+## `requires the "typescript" package`
+
+`.ts` 설정 파일을 쓰고 있는데, 그 위치에서 해석 가능한 `typescript`가 없습니다. `typescript`는 선택적 peer dependency입니다 — TypeScript 프로젝트라면 대부분 이미 있습니다. `npm install --save-dev typescript`로 해결하거나, `.js`/`.mjs`/`.cjs`/`.json` 설정으로 전환하세요. (`portfolio-shot init`과 `.ts`가 아닌 설정은 이와 무관하게 정상 동작합니다 — 이 문제는 `.ts` 설정 로딩에만 영향을 줍니다.)
+
+## `Login flow failed: ...`
+
+`auth.login`의 무언가가 제대로 동작하지 않았습니다 — 셀렉터가 안 맞았거나, 제출 후 대기(`waitForSelector`/`waitUntil`)가 타임아웃됐습니다. 디버깅 순서:
+
+1. 실제 브라우저에서 같은 단계를 수동으로 실행해서 `fields[].selector`와 `submitSelector`가 로그인 페이지의 요소와 실제로 일치하는지 확인하세요.
+2. 앱이 느리다면 `auth.login.timeout`을 늘리세요.
+3. `waitUntil`에만 의존하기보다 `waitForSelector`를 쓰는 게 좋습니다 — 단순히 네트워크가 안정되길 기다리는 대신, 로그인 성공을 직접 확인할 수 있습니다(예: 인증 후에만 존재하는 요소를 기다림).
+4. 2FA, CAPTCHA, 제3자 SSO 리다이렉트가 필요한 로그인은 자동화된 `login` 흐름으로 지원되지 않습니다 — 다른 방법으로 얻은 세션을 `storageStatePath`나 `cookies`로 사용하세요.
+
+전체 설정 형태와 세션 데이터를 커밋하면 안 되는 이유는 [인증](Authentication-ko)을 참고하세요.
+
+## `Failed to apply configured cookies.`
+
+`auth.cookies`의 항목에 `url`과 `domain`이 둘 다 없습니다 (Playwright는 둘 중 하나를 요구합니다). [인증](Authentication-ko) 참고.
 
 ## `sharp` 설치 실패 또는 런타임 에러
 

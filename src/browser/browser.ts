@@ -1,13 +1,13 @@
 import { chromium, type Browser, type BrowserContext, type Page } from 'playwright';
 import { BrowserLaunchError } from '../errors.js';
-import type { Viewport } from '../types.js';
+import type { StorageState } from './auth.js';
+import type { ColorScheme, DeviceConfig } from '../types.js';
 
 export interface BrowserSessionOptions {
-  viewport: Viewport;
-  /** Reserved for dark mode support (v1.1) */
-  colorScheme?: 'light' | 'dark';
-  /** Reserved for authenticated sessions via saved cookies/localStorage (v1.5) */
-  storageStatePath?: string;
+  device: DeviceConfig;
+  colorScheme: ColorScheme;
+  /** Shared storageState (cookies + localStorage) resolved once via `resolveAuthState` */
+  storageState?: StorageState | string;
 }
 
 export interface BrowserSession {
@@ -30,9 +30,13 @@ export async function launchBrowser(): Promise<Browser> {
 
 export async function createSession(browser: Browser, options: BrowserSessionOptions): Promise<BrowserSession> {
   const context = await browser.newContext({
-    viewport: options.viewport,
+    viewport: options.device.viewport,
+    userAgent: options.device.userAgent,
+    deviceScaleFactor: options.device.deviceScaleFactor,
+    isMobile: options.device.isMobile,
+    hasTouch: options.device.hasTouch,
     colorScheme: options.colorScheme,
-    storageState: options.storageStatePath,
+    storageState: options.storageState,
   });
 
   const page = await context.newPage();

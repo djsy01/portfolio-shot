@@ -1,9 +1,11 @@
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import fs from 'fs-extra';
-import ts from 'typescript';
+import { resolveDevice } from '../browser/devices.js';
 import { InvalidConfigError } from '../errors.js';
-import type { PortfolioShotConfig, ResolvedPortfolioShotConfig } from '../types.js';
+import type { ColorScheme, PortfolioShotConfig, ResolvedPortfolioShotConfig } from '../types.js';
+
+const COLOR_SCHEMES: ColorScheme[] = ['light', 'dark', 'no-preference'];
 
 const CONFIG_FILENAMES = [
   'portfolio-shot.config.ts',
@@ -18,6 +20,8 @@ const DEFAULTS = {
   quality: 90,
   fullPage: true,
   viewport: { width: 1440, height: 900 },
+  devices: ['desktop'] as const,
+  colorSchemes: ['light'] as ColorScheme[],
   waitUntil: 'networkidle' as const,
   timeout: 30_000,
 };
@@ -42,8 +46,22 @@ export async function findConfigFile(cwd: string = process.cwd()): Promise<strin
  * The temp file is written next to the original config so relative
  * `import`s (e.g. `from "portfolio-shot"`) still resolve against the
  * user's own `node_modules`.
+ *
+ * `typescript` itself is an optional peer dependency (most TypeScript projects
+ * already have it) and is loaded dynamically so `portfolio-shot init` and
+ * `.js`/`.json` configs work even when it isn't installed.
  */
 async function importTypeScriptConfig(configPath: string): Promise<unknown> {
+  let ts: typeof import('typescript');
+  try {
+    ts = await import('typescript');
+  } catch {
+    throw new InvalidConfigError(
+      `Reading "${configPath}" requires the "typescript" package. Run "npm install --save-dev typescript", ` +
+        'or use a .js/.mjs/.cjs/.json config instead.',
+    );
+  }
+
   const source = await fs.readFile(configPath, 'utf-8');
 
   const transpiled = ts.transpileModule(source, {
@@ -86,7 +104,7 @@ async function importConfigModule(configPath: string): Promise<unknown> {
   return imported.default ?? imported;
 }
 
-function validateConfig(raw: unknown, configPath: string): PortfolioShotConfig {
+function validateConfig(raw: unknown, configPath = 'config'): PortfolioShotConfig {
   if (typeof raw !== 'object' || raw === null) {
     throw new InvalidConfigError(`Config file "${configPath}" must export a default object.`);
   }
@@ -128,10 +146,71 @@ function validateConfig(raw: unknown, configPath: string): PortfolioShotConfig {
     throw new InvalidConfigError('Config "quality" must be between 1 and 100.');
   }
 
+  if (config.devices !== undefined) {
+    if (!Array.isArray(config.devices) || config.devices.length === 0) {
+      throw new InvalidConfigError('Config "devices" must be a non-empty array.');
+    }
+    for (const device of config.devices) {
+      if (typeof device === 'string') continue;
+      if (typeof device !== 'object' || device === null || !device.name || !device.viewport) {
+        throw new InvalidConfigError('Each custom entry in "devices" requires a "name" and a "viewport".');
+      }
+    }
+  }
+
+  if (config.colorSchemes !== undefined) {
+    if (!Array.isArray(config.colorSchemes) || config.colorSchemes.length === 0) {
+      throw new InvalidConfigError('Config "colorSchemes" must be a non-empty array.');
+    }
+    for (const scheme of config.colorSchemes) {
+      if (!COLOR_SCHEMES.includes(scheme)) {
+        throw new InvalidConfigError(`Config "colorSchemes" entries must be one of: ${COLOR_SCHEMES.join(', ')}.`);
+      }
+    }
+  }
+
+  if (config.auth?.cookies) {
+    for (const cookie of config.auth.cookies) {
+      if (!cookie.name || !cookie.value) {
+        throw new InvalidConfigError('Each entry in "auth.cookies" requires a "name" and a "value".');
+      }
+      if (!cookie.url && !cookie.domain) {
+        throw new InvalidConfigError('Each entry in "auth.cookies" requires either a "url" or a "domain".');
+      }
+    }
+  }
+
+  if (config.auth?.login) {
+    const { login } = config.auth;
+    if (!login.url || typeof login.url !== 'string') {
+      throw new InvalidConfigError('Config "auth.login" requires a "url" string field.');
+    }
+    if (!Array.isArray(login.fields) || login.fields.length === 0) {
+      throw new InvalidConfigError('Config "auth.login" requires a non-empty "fields" array.');
+    }
+    for (const field of login.fields) {
+      if (!field.selector || typeof field.value !== 'string') {
+        throw new InvalidConfigError('Each entry in "auth.login.fields" requires a "selector" and a "value".');
+      }
+    }
+    if (!login.submitSelector || typeof login.submitSelector !== 'string') {
+      throw new InvalidConfigError('Config "auth.login" requires a "submitSelector" string field.');
+    }
+  }
+
   return config as PortfolioShotConfig;
 }
 
-export function resolveConfig(config: PortfolioShotConfig): ResolvedPortfolioShotConfig {
+/**
+ * Validates and fills in defaults. Called for both the CLI's file-based config
+ * and direct calls to `generate()`, so invalid input is always caught before a
+ * browser launches — regardless of entry point.
+ */
+export function resolveConfig(rawConfig: PortfolioShotConfig): ResolvedPortfolioShotConfig {
+  const config = validateConfig(rawConfig);
+  const desktopViewport = config.viewport ?? DEFAULTS.viewport;
+  const devices = (config.devices ?? DEFAULTS.devices).map((device) => resolveDevice(device, desktopViewport));
+
   return {
     url: config.url,
     output: config.output,
@@ -139,8 +218,11 @@ export function resolveConfig(config: PortfolioShotConfig): ResolvedPortfolioSho
     format: config.format ?? DEFAULTS.format,
     quality: config.quality ?? DEFAULTS.quality,
     fullPage: config.fullPage ?? DEFAULTS.fullPage,
-    viewport: config.viewport ?? DEFAULTS.viewport,
+    viewport: desktopViewport,
     resize: config.resize,
+    devices,
+    colorSchemes: config.colorSchemes ?? DEFAULTS.colorSchemes,
+    auth: config.auth,
     waitUntil: config.waitUntil ?? DEFAULTS.waitUntil,
     timeout: config.timeout ?? DEFAULTS.timeout,
   };

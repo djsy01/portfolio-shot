@@ -8,6 +8,8 @@ This wiki holds the longer-form docs. For a quick overview, install steps, and t
 
 - **[Getting Started](Getting-Started)** — install, `init`, first `generate` run, project layout
 - **[Configuration Reference](Configuration-Reference)** — every config field, with examples
+- **[Devices and Dark Mode](Devices-and-Dark-Mode)** — mobile/tablet viewports, light/dark capture, filename suffixing
+- **[Authentication](Authentication)** — storageState, cookies, automated login
 - **[CLI Reference](CLI-Reference)** — every command and flag
 - **[Troubleshooting](Troubleshooting)** — common errors and how to fix them
 - **[Roadmap](Roadmap)** — what's shipped and what's planned (v1.0 → v3.0)

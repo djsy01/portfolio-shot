@@ -22,4 +22,11 @@ export default defineConfig({
   // resize: { width: 1280 },
   // waitUntil: "networkidle",
   // timeout: 30000,
+
+  // Capture each page across multiple devices/color schemes — see mobile-dark.config.ts
+  // devices: ["desktop", "mobile", "tablet"],
+  // colorSchemes: ["light", "dark"],
+
+  // Capture pages behind a login — see auth-login.config.ts
+  // auth: { storageStatePath: "./storage-state.json" },
 });
