@@ -8,6 +8,8 @@
 
 - **[시작하기](Getting-Started-ko)** — 설치, `init`, 첫 `generate` 실행, 프로젝트 구조
 - **[설정 옵션](Configuration-Reference-ko)** — 모든 설정 필드와 예제
+- **[디바이스와 다크 모드](Devices-and-Dark-Mode-ko)** — 모바일/태블릿 뷰포트, 라이트/다크 캡처, 파일명 접미사 규칙
+- **[인증](Authentication-ko)** — storageState, 쿠키, 로그인 자동화
 - **[CLI 명령어](CLI-Reference-ko)** — 모든 명령어와 플래그
 - **[트러블슈팅](Troubleshooting-ko)** — 자주 발생하는 에러와 해결 방법
 - **[로드맵](Roadmap-ko)** — 이미 나온 기능과 앞으로 계획된 기능 (v1.0 → v3.0)

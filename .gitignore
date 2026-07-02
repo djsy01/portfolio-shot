@@ -3,3 +3,5 @@ dist
 *.log
 .DS_Store
 .portfolio-shot.config.*.mjs
+storage-state.json
+*.storage-state.json

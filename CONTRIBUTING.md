@@ -29,7 +29,7 @@ Before opening a PR, make sure all four of `build`, `typecheck`, `lint`, and `fo
 
 ```text
 src/
-  browser/   Playwright lifecycle (launch, context, navigation, screenshot)
+  browser/   Playwright lifecycle (launch, context, navigation, screenshot, devices, auth)
   config/    Config discovery, validation, and defaults
   image/     Sharp-based optimization and format conversion
   cli/       Commander-based CLI (init, generate)
@@ -37,14 +37,15 @@ src/
   index.ts   Public library API
 ```
 
-Each layer only imports from the ones below it (`cli` → `index` → `browser`/`config`/`image` → `utils`/`types`/`errors`). Keep it that way — it's what lets features like mobile viewports, auth, or `discover` mode (see the [Roadmap](./README.md#roadmap)) get added without reshaping existing code.
+Each layer only imports from the ones below it (`cli` → `index` → `browser`/`config`/`image` → `utils`/`types`/`errors`). Keep it that way — it's what let mobile viewports, dark mode, and auth (v1.1/v1.5) get added without reshaping existing code, and is what `discover` mode and the GitHub Actions integration (v2.0/v3.0, see the [Roadmap](./README.md#roadmap)) will rely on too.
 
 ## Conventions
 
 - **No comments unless the WHY is non-obvious.** Well-named functions and types should carry the meaning.
 - **Errors are typed.** New failure modes should throw a subclass of `PortfolioShotError` (see [`src/errors.ts`](./src/errors.ts)), not a bare `Error` or an uncaught exception.
 - **Defaults live in one place.** `src/config/loadConfig.ts`'s `DEFAULTS` object and `resolveConfig()` — don't scatter fallback values across the codebase.
-- **Don't implement roadmap items early.** `discover`, dark mode, auth, and GitHub Actions integration are intentionally deferred (see the [Roadmap](./README.md#roadmap)) — the architecture should stay extensible for them, but they're out of scope for now unless a maintainer says otherwise.
+- **Config validation must cover both entry points.** `resolveConfig()` (called by both `loadConfig()` and `generate()`) is where validation belongs, not just the CLI's file-loading path — otherwise direct `generate()` calls skip it and raw Playwright errors leak through instead of a typed `InvalidConfigError`.
+- **Don't implement roadmap items early.** `discover` and the GitHub Actions integration (v2.0/v3.0) are intentionally deferred (see the [Roadmap](./README.md#roadmap)) — the architecture should stay extensible for them, but they're out of scope for now unless a maintainer says otherwise.
 
 ## Testing a change manually
 

@@ -25,9 +25,32 @@ The page didn't reach the configured `waitUntil` state within `timeout` millisec
 - **Background polling never goes idle** — `networkidle` waits for no network activity for 500ms; if your app long-polls or keeps a websocket open, that condition may never fire. Switch `waitUntil` to `"load"` or `"domcontentloaded"`.
 - **Site is actually down or the URL/path is wrong** — verify the URL resolves in a normal browser first.
 
-## Config field rejected at load time (`url`, `format`, `quality`, ...)
+## Config field rejected at load time (`url`, `format`, `quality`, `devices`, `colorSchemes`, `auth`, ...)
 
-Config validation runs before anything launches, and the error message names the exact field and why (e.g. `Config "quality" must be between 1 and 100.`). Cross-check against [Configuration Reference](Configuration-Reference).
+Config validation runs before anything launches — regardless of whether you use the CLI or call `generate()` directly from a script — and the error message names the exact field and why (e.g. `Config "quality" must be between 1 and 100.`, `Config "colorSchemes" entries must be one of: light, dark, no-preference.`). Cross-check against [Configuration Reference](Configuration-Reference).
+
+## `Unknown device "..."`
+
+A `devices` entry wasn't `"desktop"`, `"mobile"`, `"tablet"`, or an exact Playwright device name. Check spelling against the [Playwright device catalog](https://github.com/microsoft/playwright/blob/main/packages/playwright-core/src/server/deviceDescriptorsSource.json), or pass a custom object instead: `{ name: "wide", viewport: { width: 1920, height: 1080 } }`. See [Devices and Dark Mode](Devices-and-Dark-Mode).
+
+## `requires the "typescript" package`
+
+You're using a `.ts` config file, but `typescript` isn't installed anywhere resolvable from it. `typescript` is an optional peer dependency — most TypeScript projects already have it. Fix with `npm install --save-dev typescript`, or switch to a `.js`/`.mjs`/`.cjs`/`.json` config. (`portfolio-shot init` and non-`.ts` configs work fine either way — this only affects `.ts` config loading.)
+
+## `Login flow failed: ...`
+
+Something in `auth.login` didn't work — a selector didn't match, or the post-submit wait (`waitForSelector`/`waitUntil`) timed out. To debug:
+
+1. Run the same steps manually in a real browser — confirm `fields[].selector` and `submitSelector` actually match elements on the login page.
+2. If the app is slow, raise `auth.login.timeout`.
+3. Prefer `waitForSelector` over relying on `waitUntil` — it directly confirms the login succeeded (e.g. wait for an element that only exists once authenticated) instead of just waiting for network activity to settle.
+4. Logins requiring 2FA, CAPTCHA, or SSO redirects to a third party aren't supported by the automated `login` flow — use `storageStatePath` or `cookies` with a session obtained another way instead.
+
+See [Authentication](Authentication) for the full config shape and a security note about not committing session data.
+
+## `Failed to apply configured cookies.`
+
+An entry in `auth.cookies` is missing both `url` and `domain` (Playwright requires one or the other). See [Authentication](Authentication).
 
 ## `sharp` fails to install or errors at runtime
 

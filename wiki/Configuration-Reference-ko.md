@@ -4,18 +4,21 @@
 
 ## 필드
 
-| 옵션        | 타입                                                        | 기본값                         | 필수 여부 |
-| ----------- | ----------------------------------------------------------- | ------------------------------ | --------- |
-| `url`       | `string`                                                    | —                              | 필수      |
-| `output`    | `string`                                                    | —                              | 필수      |
-| `pages`     | `{ path: string; name: string }[]`                          | —                              | 필수      |
-| `format`    | `"webp" \| "png"`                                           | `"webp"`                       | 선택      |
-| `quality`   | `number` (1~100)                                            | `90`                           | 선택      |
-| `fullPage`  | `boolean`                                                   | `true`                         | 선택      |
-| `viewport`  | `{ width: number; height: number }`                         | `{ width: 1440, height: 900 }` | 선택      |
-| `resize`    | `{ width?: number; height?: number }`                       | 없음 (리사이즈 안 함)          | 선택      |
-| `waitUntil` | `"load" \| "domcontentloaded" \| "networkidle" \| "commit"` | `"networkidle"`                | 선택      |
-| `timeout`   | `number` (ms)                                               | `30000`                        | 선택      |
+| 옵션           | 타입                                                        | 기본값                         | 필수 여부 |
+| -------------- | ----------------------------------------------------------- | ------------------------------ | --------- |
+| `url`          | `string`                                                    | —                              | 필수      |
+| `output`       | `string`                                                    | —                              | 필수      |
+| `pages`        | `{ path: string; name: string }[]`                          | —                              | 필수      |
+| `format`       | `"webp" \| "png"`                                           | `"webp"`                       | 선택      |
+| `quality`      | `number` (1~100)                                            | `90`                           | 선택      |
+| `fullPage`     | `boolean`                                                   | `true`                         | 선택      |
+| `viewport`     | `{ width: number; height: number }`                         | `{ width: 1440, height: 900 }` | 선택      |
+| `resize`       | `{ width?: number; height?: number }`                       | 없음 (리사이즈 안 함)          | 선택      |
+| `devices`      | `(string \| DeviceConfig)[]`                                | `["desktop"]`                  | 선택      |
+| `colorSchemes` | `("light" \| "dark" \| "no-preference")[]`                  | `["light"]`                    | 선택      |
+| `auth`         | `AuthConfig`                                                | 없음                           | 선택      |
+| `waitUntil`    | `"load" \| "domcontentloaded" \| "networkidle" \| "commit"` | `"networkidle"`                | 선택      |
+| `timeout`      | `number` (ms)                                               | `30000`                        | 선택      |
 
 ### `url`
 
@@ -58,6 +61,14 @@ Playwright 페이지 이동 대기 조건:
 
 페이지 캡처가 `PageCaptureError`로 중단되기까지의 이동 타임아웃(밀리초)입니다.
 
+### `devices` / `colorSchemes`
+
+한 번의 실행으로 여러 뷰포트(모바일/태블릿)와 컬러 스킴(라이트/다크) 조합으로 각 페이지를 캡처합니다. 파일명에는 값이 2개 이상인 축에만 접미사가 붙습니다. 내장 디바이스 별칭과 파일명 접미사 규칙 등 자세한 내용은 [디바이스와 다크 모드](Devices-and-Dark-Mode-ko)를 참고하세요.
+
+### `auth`
+
+저장된 세션을 불러오거나, 쿠키를 주입하거나, 캡처 전에 로그인 폼을 한 번 자동화합니다 — 결과로 얻은 세션은 모든 디바이스/컬러 스킴 조합에서 재사용됩니다. 자세한 내용과 세션 파일을 커밋하면 안 되는 이유는 [인증](Authentication-ko)을 참고하세요.
+
 ## 예제: 전체 설정
 
 ```ts
@@ -76,6 +87,9 @@ export default defineConfig({
   fullPage: true,
   viewport: { width: 1440, height: 900 },
   resize: { width: 1280 },
+  devices: ['desktop', 'mobile'],
+  colorSchemes: ['light', 'dark'],
+  auth: { storageStatePath: './storage-state.json' },
   waitUntil: 'networkidle',
   timeout: 30000,
 });
@@ -95,6 +109,6 @@ const result = await generate({
 });
 ```
 
-`generate()`는 `{ outputDir, pages: [{ page, file, durationMs }], durationMs }`를 반환합니다.
+`generate()`는 `{ outputDir, pages: [{ page, device, colorScheme, file, durationMs }], durationMs }`를 반환합니다.
 
-함께 보기: [CLI 명령어](CLI-Reference-ko), [트러블슈팅](Troubleshooting-ko).
+함께 보기: [CLI 명령어](CLI-Reference-ko), [디바이스와 다크 모드](Devices-and-Dark-Mode-ko), [인증](Authentication-ko), [트러블슈팅](Troubleshooting-ko).

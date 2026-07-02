@@ -4,18 +4,21 @@
 
 ## Fields
 
-| Option      | Type                                                        | Default                        | Required |
-| ----------- | ----------------------------------------------------------- | ------------------------------ | -------- |
-| `url`       | `string`                                                    | —                              | yes      |
-| `output`    | `string`                                                    | —                              | yes      |
-| `pages`     | `{ path: string; name: string }[]`                          | —                              | yes      |
-| `format`    | `"webp" \| "png"`                                           | `"webp"`                       | no       |
-| `quality`   | `number` (1–100)                                            | `90`                           | no       |
-| `fullPage`  | `boolean`                                                   | `true`                         | no       |
-| `viewport`  | `{ width: number; height: number }`                         | `{ width: 1440, height: 900 }` | no       |
-| `resize`    | `{ width?: number; height?: number }`                       | none (no resize)               | no       |
-| `waitUntil` | `"load" \| "domcontentloaded" \| "networkidle" \| "commit"` | `"networkidle"`                | no       |
-| `timeout`   | `number` (ms)                                               | `30000`                        | no       |
+| Option         | Type                                                        | Default                        | Required |
+| -------------- | ----------------------------------------------------------- | ------------------------------ | -------- |
+| `url`          | `string`                                                    | —                              | yes      |
+| `output`       | `string`                                                    | —                              | yes      |
+| `pages`        | `{ path: string; name: string }[]`                          | —                              | yes      |
+| `format`       | `"webp" \| "png"`                                           | `"webp"`                       | no       |
+| `quality`      | `number` (1–100)                                            | `90`                           | no       |
+| `fullPage`     | `boolean`                                                   | `true`                         | no       |
+| `viewport`     | `{ width: number; height: number }`                         | `{ width: 1440, height: 900 }` | no       |
+| `resize`       | `{ width?: number; height?: number }`                       | none (no resize)               | no       |
+| `devices`      | `(string \| DeviceConfig)[]`                                | `["desktop"]`                  | no       |
+| `colorSchemes` | `("light" \| "dark" \| "no-preference")[]`                  | `["light"]`                    | no       |
+| `auth`         | `AuthConfig`                                                | none                           | no       |
+| `waitUntil`    | `"load" \| "domcontentloaded" \| "networkidle" \| "commit"` | `"networkidle"`                | no       |
+| `timeout`      | `number` (ms)                                               | `30000`                        | no       |
 
 ### `url`
 
@@ -58,6 +61,14 @@ Playwright navigation wait condition:
 
 Navigation timeout in milliseconds before a page capture is aborted with a `PageCaptureError`.
 
+### `devices` / `colorSchemes`
+
+Capture each page across multiple viewports (mobile/tablet) and/or color schemes (light/dark) in one run. Filenames get a suffix per dimension only when that dimension has more than one entry. Full details, the built-in device aliases, and how filename suffixing works: [Devices and Dark Mode](Devices-and-Dark-Mode).
+
+### `auth`
+
+Load a saved session, inject cookies, or automate a login form once before capturing — the resulting session is reused across every device/color-scheme variant. Full details and a security note about not committing session files: [Authentication](Authentication).
+
 ## Example: full config
 
 ```ts
@@ -76,6 +87,9 @@ export default defineConfig({
   fullPage: true,
   viewport: { width: 1440, height: 900 },
   resize: { width: 1280 },
+  devices: ['desktop', 'mobile'],
+  colorSchemes: ['light', 'dark'],
+  auth: { storageStatePath: './storage-state.json' },
   waitUntil: 'networkidle',
   timeout: 30000,
 });
@@ -95,6 +109,6 @@ const result = await generate({
 });
 ```
 
-`generate()` returns `{ outputDir, pages: [{ page, file, durationMs }], durationMs }`.
+`generate()` returns `{ outputDir, pages: [{ page, device, colorScheme, file, durationMs }], durationMs }`.
 
-See also: [CLI Reference](CLI-Reference), [Troubleshooting](Troubleshooting).
+See also: [CLI Reference](CLI-Reference), [Devices and Dark Mode](Devices-and-Dark-Mode), [Authentication](Authentication), [Troubleshooting](Troubleshooting).

@@ -9,6 +9,8 @@
   npx playwright install chromium
   ```
 
+- `typescript` in your project, only if you want to use a `.ts` config (optional peer dependency — `.js`/`.mjs`/`.cjs`/`.json` work without it)
+
 ## Install
 
 ```bash
@@ -67,11 +69,17 @@ Done in 4.2s
 
 Screenshots land in `<output>/<name>.<format>` — with the example config above, `./public/screenshots/home.webp` and `./public/screenshots/projects.webp`.
 
+## Next steps
+
+- Capture multiple devices and light/dark mode in one run — [Devices and Dark Mode](Devices-and-Dark-Mode)
+- Capture pages behind a login — [Authentication](Authentication)
+- Every config field, with examples — [Configuration Reference](Configuration-Reference)
+
 ## Project layout (for contributors)
 
 ```text
 src/
-  browser/   Playwright lifecycle (launch, context, navigation, screenshot)
+  browser/   Playwright lifecycle (launch, context, navigation, screenshot, devices, auth)
   config/    Config discovery, validation, and defaults
   image/     Sharp-based optimization and format conversion
   cli/       Commander-based CLI (init, generate)
