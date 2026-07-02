@@ -1,0 +1,69 @@
+{
+  "name": "portfolio-shot",
+  "version": "1.0.0",
+  "description": "Automatically capture, optimize, and save screenshots of your web projects for developer portfolios.",
+  "keywords": [
+    "screenshot",
+    "playwright",
+    "portfolio",
+    "webp",
+    "cli",
+    "automation",
+    "sharp"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "portfolio-shot": "./dist/cli/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "README.ko.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && chmod +x dist/cli/index.js",
+    "dev": "tsc -p tsconfig.json --watch",
+    "lint": "eslint \"src/**/*.ts\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "fs-extra": "^11.2.0",
+    "playwright": "^1.47.0",
+    "sharp": "^0.33.5",
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.14.0",
+    "eslint": "^9.9.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.3",
+    "typescript-eslint": "^8.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/portfolio-shot.git"
+  },
+  "homepage": "https://github.com/your-username/portfolio-shot#readme",
+  "bugs": {
+    "url": "https://github.com/your-username/portfolio-shot/issues"
+  }
+}
