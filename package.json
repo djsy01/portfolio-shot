@@ -22,7 +22,7 @@
     }
   },
   "bin": {
-    "portfolio-shot": "./dist/cli/index.js"
+    "portfolio-shot": "dist/cli/index.js"
   },
   "files": [
     "dist",
