@@ -55,9 +55,22 @@ Done in 4.2s
 
 ## 설치
 
+이 저장소를 클론할 필요는 없습니다 — portfolio-shot은 npm에 배포되어 있습니다. 프로젝트에 추가하려면:
+
 ```bash
 npm install --save-dev portfolio-shot
 ```
+
+### 설치 없이 한 번만 실행하기
+
+`package.json`을 건드리지 않고 한 번만 써보고 싶다면 `npx`를 쓰세요 — npm 레지스트리에서 패키지를 임시 캐시로 받아서 바로 실행하며, 로컬 설치가 필요 없습니다.
+
+```bash
+npx portfolio-shot@latest init
+npx portfolio-shot@latest generate
+```
+
+기존 프로젝트에서 portfolio-shot을 가장 빠르게 써보는 방법입니다. 빌드 과정에 반복적으로 포함시키고 싶어지면, 그때 위의 `--save-dev`로 설치하면 됩니다.
 
 ## 빠른 시작
 

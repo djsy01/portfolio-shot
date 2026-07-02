@@ -13,9 +13,20 @@
 
 ## Install
 
+No need to clone this repository — portfolio-shot is published on npm.
+
 ```bash
 npm install --save-dev portfolio-shot
 ```
+
+**Or skip installing entirely** for a one-off run:
+
+```bash
+npx portfolio-shot@latest init
+npx portfolio-shot@latest generate
+```
+
+`npx` downloads the package to a temporary cache and runs it without touching your `package.json`/`node_modules` — handy for trying it out or a single capture. Switch to `npm install --save-dev` (above) once you want it as a repeatable part of your workflow.
 
 ## Scaffold a config
 

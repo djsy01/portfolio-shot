@@ -13,9 +13,20 @@
 
 ## 설치
 
+이 저장소를 클론할 필요는 없습니다 — portfolio-shot은 npm에 배포되어 있습니다.
+
 ```bash
 npm install --save-dev portfolio-shot
 ```
+
+**아예 설치하지 않고 한 번만 실행**할 수도 있습니다.
+
+```bash
+npx portfolio-shot@latest init
+npx portfolio-shot@latest generate
+```
+
+`npx`는 패키지를 임시 캐시로 받아서 `package.json`/`node_modules`를 건드리지 않고 바로 실행합니다 — 한 번 써보거나 단발성 캡처에 유용합니다. 반복적으로 쓰고 싶어지면 위의 `npm install --save-dev`로 전환하세요.
 
 ## 설정 파일 생성
 

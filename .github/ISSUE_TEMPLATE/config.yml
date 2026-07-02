@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation / Wiki
+    url: https://github.com/djsy01/portfolio-shot/wiki
+    about: Getting Started, Configuration Reference, Devices & Dark Mode, Authentication, and Troubleshooting are all covered here — check before filing an issue.

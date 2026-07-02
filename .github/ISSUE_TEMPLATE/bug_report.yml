@@ -1,0 +1,84 @@
+name: Bug report
+description: Something doesn't work the way it should
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing, check the [Troubleshooting wiki page](https://github.com/djsy01/portfolio-shot/wiki/Troubleshooting) — your error message may already be covered there.
+
+  - type: input
+    id: version
+    attributes:
+      label: portfolio-shot version
+      description: Output of `npx portfolio-shot --version`
+      placeholder: '1.5.0'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: How are you running it?
+      options:
+        - 'npm install --save-dev portfolio-shot (installed in project)'
+        - 'npx portfolio-shot@latest (no install)'
+        - "Library usage (import { generate } from 'portfolio-shot')"
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version
+      description: Output of `node --version`
+      placeholder: 'v20.11.0'
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: 'macOS 14, Ubuntu 22.04 (CI), Windows 11, ...'
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Config
+      description: Your `portfolio-shot.config.*` (or the object passed to `generate()`). Redact the real `url` if it's private, and remove any real credentials from `auth`.
+      render: ts
+    validations:
+      required: true
+
+  - type: input
+    id: command
+    attributes:
+      label: Command you ran
+      placeholder: 'npx portfolio-shot generate'
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior / full error output
+      description: Paste the complete terminal output, not just the last line.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot (if the issue is a rendering problem)
+      description: If the captured image itself looks wrong (blank, partial, wrong device/theme), attach it here.

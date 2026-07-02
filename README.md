@@ -55,9 +55,22 @@ The same flow is exposed as a plain async function — `generate(config)` — so
 
 ## Install
 
+You don't need to clone this repository to use portfolio-shot — it's published on npm. Add it to your project:
+
 ```bash
 npm install --save-dev portfolio-shot
 ```
+
+### Without installing (one-off run)
+
+To try it or run it once without touching your `package.json`, use `npx` — it fetches the package straight from the npm registry into a temporary cache and runs it, no local install required:
+
+```bash
+npx portfolio-shot@latest init
+npx portfolio-shot@latest generate
+```
+
+This is the fastest way to try portfolio-shot on an existing project. Add `--save-dev` later (above) once you want it as a repeatable part of your build.
 
 ## Quick start
 

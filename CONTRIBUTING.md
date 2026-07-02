@@ -2,6 +2,8 @@
 
 Thanks for taking a look. This project is small on purpose — please keep contributions focused and consistent with the existing architecture.
 
+> Just want to **use** portfolio-shot in your own project? You don't need any of this — see [Install](./README.md#install) for `npm install`/`npx` usage. Cloning the repo is only needed to work on portfolio-shot itself.
+
 ## Local setup
 
 ```bash
